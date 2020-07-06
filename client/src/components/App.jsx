@@ -1,11 +1,20 @@
 import React from 'react';
+import axios from 'axios';
 
+const date = new Date()
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      state: ''
+      date: date,
+      formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
     }
+    this.changeDate = this.changeDate.bind(this)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    initMap()
+    window.initMap = initMap.bind(this);
   }
 
   componentDidMount() {
@@ -194,8 +203,7 @@ class App extends React.Component {
           }
         ]
       });
-    
-      map.data.loadGeoJson('http://localhost:3001/');
+      map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
     
       map.data.setStyle(function(feature) {
         let stateColor
@@ -217,22 +225,43 @@ class App extends React.Component {
           strokeWeight: 3
         });
       });
-          map.data.addListener('click', (event) => {
-            alert(
-              event.feature.getProperty('STUSPS') + ": \n" + 
-              'Total positive cases: ' + event.feature.getProperty('positive') + '\n' +
-              'Increase of positive cases: ' + event.feature.getProperty('positiveIncrease') + '\n' +
-              'Total deaths: ' + event.feature.getProperty('death') + '\n' +
-              'Last updated: ' + event.feature.getProperty('lastUpdated')
-          )})
+      map.data.addListener('click', (event) => {
+        alert(
+          event.feature.getProperty('STUSPS') + ": \n" + 
+          'Total positive cases: ' + event.feature.getProperty('positive') + '\n' +
+          'Increase of positive cases: ' + event.feature.getProperty('positiveIncrease') + '\n' +
+          'Total deaths: ' + event.feature.getProperty('death') + '\n' +
+          'Last updated: ' + event.feature.getProperty('lastUpdated')
+      )})
     }
-    
     window.initMap = initMap.bind(this);
   }
 
+  changeDate(e) {
+    const { date } = this.state
+    if (e.keyCode === 37) {
+      date.setDate(date.getDate() - 1);
+      this.setState({
+        date: date,
+        formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+      })
+    } 
+    else if (e.keyCode === 39 && '' + date.getMonth() + date.getDate() !== '' + new Date().getMonth() + new Date().getDate()) {
+      date.setDate(date.getDate() + 1);
+      this.setState({
+        date: date,
+        formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+      })
+    }
+  } 
+
   render() {
+    const { formattedDate } = this.state
     return (
-      <div id="map"></div>
+      <div id='content' onKeyDown={this.changeDate}>
+        <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}</div>
+        <div id="map"></div>
+      </div>
     )
   }
 };
