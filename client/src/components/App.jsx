@@ -6,21 +6,10 @@ class App extends React.Component {
     this.state = {
       state: ''
     }
-    this.setStates = this.setStates.bind(this)
-  }
-
-  setStates(state) {
-    this.setState({
-      state
-    })
   }
 
   componentDidMount() {
-    // const script = document.createElement("script")
-    // script.src = `https://maps.googleapis.com/maps/api/js?key="${process.env.GOOGLE_MAPS_API_KEY}"&callback=initMap`
-    // document.body.appendChild(script);  
     let state;
-
     const initMap = () => {
       var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
@@ -209,14 +198,12 @@ class App extends React.Component {
     
       map.data.loadGeoJson('http://localhost:3001/');
     
-      // var infowindow = new google.maps.InfoWindow();
-      
       map.data.setStyle(function(feature) {
-        if (feature.getProperty('isPurple')) {
+        if (feature.getProperty('isSelected')) {
           return ({
             strokeColor: 'green',
             fillColor: 'purple',
-            // strokeWeight: 3
+            strokeWeight: 3
           });
         }
         return ({
@@ -225,44 +212,17 @@ class App extends React.Component {
         });
       });
 
-      // map.data.addListener('click', function(event) {
-      //   event.feature.setProperty('isPurple', true);
-      // });
-
-      // map.data.addListener('mouseout', function(event) {
-      //   map.data.revertStyle();
-      // });
-
-      map.data.addListener('click', function(event) {
-        event.feature.setProperty('isPurple', !event.feature.getProperty('isPurple'));
+      map.data.addListener('mouseover', function(event) {
+        event.feature.setProperty('isSelected', true);
         state = event.feature.getProperty('NAME')
-        console.log(event.feature)
         setState(state)
-        // let state = event.feature.getProperty('NAME');
-        // infowindow.setContent(state); // show the html variable in the infowindow
-        // infowindow.setPosition(event.latLng); // anchor the infowindow at the marker
-        // infowindow.open(map);
+      });
+
+      map.data.addListener('mouseout', function(event) {
+        event.feature.setProperty('isSelected', false);
+        setState('')
       });
        
-
-      // let stateCoordinates = [
-      //   {lat: 44.500000, lng: -89.500000},
-      //   {lat: 39.000000, lng: -80.500000},
-      //   {lat: 44.000000, lng:	-72.699997},
-      //   {lat: 31.000000, lng:	-100.000000},
-      //   {lat: 44.500000, lng:	-100.000000},
-      // ]
-  
-      // const addUserMarkers = () => {
-      //   stateCoordinates.forEach(state => {
-      //     new google.maps.Marker({
-      //       position: state,
-      //       map: map,
-      //       icon: './images/marker3.gif',
-      //     });
-      //   })
-      // }
-      // addUserMarkers()
     };
     const setState = (state) => {
       this.setState({
@@ -274,9 +234,6 @@ class App extends React.Component {
   }
 
   render() {
-    // if (this.state.state) {
-    //   return <div id="app" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '200px', color: 'green'}}>{this.state.state}</div>
-    // }
     return (
       <div id="map"></div>
     )
