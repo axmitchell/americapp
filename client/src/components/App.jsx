@@ -4,13 +4,23 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      state: ''
     }
+    this.setStates = this.setStates.bind(this)
+  }
+
+  setStates(state) {
+    this.setState({
+      state
+    })
   }
 
   componentDidMount() {
     // const script = document.createElement("script")
     // script.src = `https://maps.googleapis.com/maps/api/js?key="${process.env.GOOGLE_MAPS_API_KEY}"&callback=initMap`
     // document.body.appendChild(script);  
+    let state;
+
     const initMap = () => {
       var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
@@ -202,12 +212,15 @@ class App extends React.Component {
       // var infowindow = new google.maps.InfoWindow();
       
       map.data.setStyle(function(feature) {
-        var color = 'green';
         if (feature.getProperty('isPurple')) {
-          color = 'purple';
+          return ({
+            strokeColor: 'green',
+            fillColor: 'purple',
+            // strokeWeight: 3
+          });
         }
         return ({
-          strokeColor: color,
+          strokeColor: 'green',
           strokeWeight: 3
         });
       });
@@ -221,8 +234,10 @@ class App extends React.Component {
       // });
 
       map.data.addListener('click', function(event) {
-        console.log(event.feature.getProperty('isPurple'))
         event.feature.setProperty('isPurple', !event.feature.getProperty('isPurple'));
+        state = event.feature.getProperty('NAME')
+        console.log(event.feature)
+        setState(state)
         // let state = event.feature.getProperty('NAME');
         // infowindow.setContent(state); // show the html variable in the infowindow
         // infowindow.setPosition(event.latLng); // anchor the infowindow at the marker
@@ -249,11 +264,19 @@ class App extends React.Component {
       // }
       // addUserMarkers()
     };
+    const setState = (state) => {
+      this.setState({
+        state
+      })
+    }
 
     window.initMap = initMap.bind(this);
   }
 
   render() {
+    // if (this.state.state) {
+    //   return <div id="app" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '200px', color: 'green'}}>{this.state.state}</div>
+    // }
     return (
       <div id="map"></div>
     )
