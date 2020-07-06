@@ -9,7 +9,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let state;
     const initMap = () => {
       var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
@@ -207,7 +206,7 @@ class App extends React.Component {
           stateColor = 'orange'
         }
         if (feature.getProperty('positiveIncrease') < 100) {
-          stateColor = 'green'
+          stateColor = 'yellow'
         }
         if (feature.getProperty('positiveIncrease') === 0) {
           stateColor = 'blue'
@@ -218,26 +217,16 @@ class App extends React.Component {
           strokeWeight: 3
         });
       });
-
-      map.data.addListener('mouseover', function(event) {
-        console.log(event.feature.getProperty('positiveIncrease'))
-        event.feature.setProperty('isSelected', true);
-        state = event.feature.getProperty('NAME')
-        setState(state)
-      });
-
-      map.data.addListener('mouseout', function(event) {
-        event.feature.setProperty('isSelected', false);
-        setState('')
-      });
-       
-    };
-    const setState = (state) => {
-      this.setState({
-        state
-      })
+          map.data.addListener('click', (event) => {
+            alert(
+              event.feature.getProperty('STUSPS') + ": \n" + 
+              'Total positive cases: ' + event.feature.getProperty('positive') + '\n' +
+              'Increase of positive cases: ' + event.feature.getProperty('positiveIncrease') + '\n' +
+              'Total deaths: ' + event.feature.getProperty('death') + '\n' +
+              'Last updated: ' + event.feature.getProperty('lastUpdated')
+          )})
     }
-
+    
     window.initMap = initMap.bind(this);
   }
 
