@@ -199,20 +199,28 @@ class App extends React.Component {
       map.data.loadGeoJson('http://localhost:3001/');
     
       map.data.setStyle(function(feature) {
-        if (feature.getProperty('isSelected')) {
-          return ({
-            strokeColor: 'green',
-            fillColor: 'purple',
-            strokeWeight: 3
-          });
+        let stateColor
+        if (feature.getProperty('positiveIncrease') > 1000) {
+          stateColor = 'red'
+        }
+        if (feature.getProperty('positiveIncrease') < 1000 && feature.getProperty('positiveIncrease') > 100) {
+          stateColor = 'orange'
+        }
+        if (feature.getProperty('positiveIncrease') < 100) {
+          stateColor = 'green'
+        }
+        if (feature.getProperty('positiveIncrease') === 0) {
+          stateColor = 'blue'
         }
         return ({
           strokeColor: 'green',
+          fillColor: stateColor,
           strokeWeight: 3
         });
       });
 
       map.data.addListener('mouseover', function(event) {
+        console.log(event.feature.getProperty('positiveIncrease'))
         event.feature.setProperty('isSelected', true);
         state = event.feature.getProperty('NAME')
         setState(state)
