@@ -199,39 +199,55 @@ class App extends React.Component {
     
       map.data.loadGeoJson('http://localhost:3001/');
     
-      var infowindow = new google.maps.InfoWindow();
-                
-      map.data.addListener('click', function(event) {
-        let state = event.feature.getProperty('NAME');
-        infowindow.setContent(state); // show the html variable in the infowindow
-        infowindow.setPosition(event.latLng); // anchor the infowindow at the marker
-        infowindow.open(map);
-      });
-       
-      map.data.setStyle({
-        strokeColor: 'green',
-        strokeWeight: 3
+      // var infowindow = new google.maps.InfoWindow();
+      
+      map.data.setStyle(function(feature) {
+        var color = 'green';
+        if (feature.getProperty('isPurple')) {
+          color = 'purple';
+        }
+        return ({
+          strokeColor: color,
+          strokeWeight: 3
+        });
       });
 
-      let stateCoordinates = [
-        {lat: 44.500000, lng: -89.500000},
-        {lat: 39.000000, lng: -80.500000},
-        {lat: 44.000000, lng:	-72.699997},
-        {lat: 31.000000, lng:	-100.000000},
-        {lat: 44.500000, lng:	-100.000000},
-      ]
+      // map.data.addListener('click', function(event) {
+      //   event.feature.setProperty('isPurple', true);
+      // });
+
+      // map.data.addListener('mouseout', function(event) {
+      //   map.data.revertStyle();
+      // });
+
+      map.data.addListener('click', function(event) {
+        console.log(event.feature.getProperty('isPurple'))
+        event.feature.setProperty('isPurple', !event.feature.getProperty('isPurple'));
+        // let state = event.feature.getProperty('NAME');
+        // infowindow.setContent(state); // show the html variable in the infowindow
+        // infowindow.setPosition(event.latLng); // anchor the infowindow at the marker
+        // infowindow.open(map);
+      });
+       
+
+      // let stateCoordinates = [
+      //   {lat: 44.500000, lng: -89.500000},
+      //   {lat: 39.000000, lng: -80.500000},
+      //   {lat: 44.000000, lng:	-72.699997},
+      //   {lat: 31.000000, lng:	-100.000000},
+      //   {lat: 44.500000, lng:	-100.000000},
+      // ]
   
-      const addUserMarkers = () => {
-        stateCoordinates.forEach(state => {
-          new google.maps.Marker({
-            position: state,
-            map: map,
-            icon: './images/marker3.gif',
-          });
-        })
-  
-      }
-      addUserMarkers()
+      // const addUserMarkers = () => {
+      //   stateCoordinates.forEach(state => {
+      //     new google.maps.Marker({
+      //       position: state,
+      //       map: map,
+      //       icon: './images/marker3.gif',
+      //     });
+      //   })
+      // }
+      // addUserMarkers()
     };
 
     window.initMap = initMap.bind(this);
