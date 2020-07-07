@@ -194,7 +194,7 @@ class App extends React.Component {
         ]
       });
     
-      map.data.loadGeoJson('http://localhost:3001/');
+      map.data.loadGeoJson('http://localhost:3000/map');
 
       map.data.setStyle(function(feature) {
         return ({
@@ -204,6 +204,7 @@ class App extends React.Component {
       });
 
       map.data.addListener('click', function(event) {
+        console.log(event.latLng)
         new google.maps.Marker({
           position: event.latLng,
           map: map,
