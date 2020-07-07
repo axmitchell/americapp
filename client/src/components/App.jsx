@@ -204,9 +204,13 @@ class App extends React.Component {
       });
 
       map.data.addListener('click', function(event) {
-        console.log(event.latLng)
+        let latLngComma = event.latLng.toString().indexOf(',')
+        let latLng = {
+          lat: Number(event.latLng.toString().slice(1, latLngComma)) - .9,
+          lng: Number(event.latLng.toString().slice(latLngComma + 2, -1))
+        }
         new google.maps.Marker({
-          position: event.latLng,
+          position: latLng,
           map: map,
           icon: './images/marker3.gif',
         });
