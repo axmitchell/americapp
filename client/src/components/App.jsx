@@ -13,13 +13,15 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    initMap()
-    window.initMap = initMap.bind(this);
+    map.data.forEach(function(feature) {
+      map.data.remove(feature);
+    });
+    map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
   }
 
   componentDidMount() {
     const initMap = () => {
-      var map = new google.maps.Map(document.getElementById('map'), {
+      global.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
         zoom: 5,
         gestureHandling: 'none',
@@ -204,7 +206,6 @@ class App extends React.Component {
         ]
       });
       map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
-    
       map.data.setStyle(function(feature) {
         let stateColor
         if (feature.getProperty('positiveIncrease') > 1000) {
@@ -220,19 +221,21 @@ class App extends React.Component {
           stateColor = 'blue'
         }
         return ({
-          strokeColor: 'green',
+          strokeColor: stateColor,
           fillColor: stateColor,
-          strokeWeight: 3
+          // strokeWeight: 3,
+          fillOpacity: 1
         });
       });
+
       map.data.addListener('click', (event) => {
         alert(
           event.feature.getProperty('STUSPS') + ": \n" + 
           'Total positive cases: ' + event.feature.getProperty('positive') + '\n' +
           'Increase of positive cases: ' + event.feature.getProperty('positiveIncrease') + '\n' +
-          'Total deaths: ' + event.feature.getProperty('death') + '\n' +
-          'Last updated: ' + event.feature.getProperty('lastUpdated')
-      )})
+          'Total deaths: ' + event.feature.getProperty('death') + '\n'
+        )
+      })
     }
     window.initMap = initMap.bind(this);
   }
