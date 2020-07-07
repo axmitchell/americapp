@@ -6,21 +6,41 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      states: [],
       date: date,
       formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
     }
     this.changeDate = this.changeDate.bind(this)
+    this.addStateInfo = this.addStateInfo.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
-    map.data.forEach(function(feature) {
-      map.data.remove(feature);
-    });
-    map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
+  //   map.data.forEach(function(feature, index) {
+  //     //find new state info and add to properties
+  //             // map.data.remove(feature);
+  //     styleMap(feature)
+  //   });
+  //   // map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
   }
 
-  componentDidMount() {
+  addStateInfo(feature, index) {
+    feature.setProperty('positiveIncrease', this.state.states[index].positiveIncrease)
+  }
+
+componentDidMount() {
+  let states
+    axios.get(`/data?date=${this.state.formattedDate}`)
+      .then(res => {
+        states = res.data
+        this.setState({
+          states: res.data
+        });
+        console.log('got state info')
+      })
+      .then(() => styleMap())
+      .catch(console.log)
     const initMap = () => {
+      console.log('initializing map')
       global.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
         zoom: 5,
@@ -205,35 +225,46 @@ class App extends React.Component {
           }
         ]
       });
-      map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
-      map.data.setStyle(function(feature) {
-        let stateColor
-        if (feature.getProperty('positiveIncrease') > 1000) {
-          stateColor = 'red'
-        }
-        if (feature.getProperty('positiveIncrease') < 1000 && feature.getProperty('positiveIncrease') > 100) {
-          stateColor = 'orange'
-        }
-        if (feature.getProperty('positiveIncrease') < 100) {
-          stateColor = 'yellow'
-        }
-        if (feature.getProperty('positiveIncrease') === 0) {
-          stateColor = 'blue'
-        }
-        return ({
-          strokeColor: 'black',
-          fillColor: stateColor,
-          strokeWeight: 3,
-          fillOpacity: 1
+      map.data.loadGeoJson(`http://localhost:3000/map`);
+      let i = 0
+      global.styleMap = () => {
+        console.log('adding style')
+        map.data.setStyle(function(feature) {
+          let stateColor
+          if (states) {
+            let selState = states[feature.getProperty('stateId')]
+            if (selState.positiveIncrease > 1000) {
+              stateColor = 'red'
+            }
+            if (selState.positiveIncrease < 1000 && selState.positiveIncrease > 100) {
+              stateColor = 'orange'
+            }
+            if (selState.positiveIncrease < 100) {
+              stateColor = 'yellow'
+            }
+            if (selState.positiveIncrease === 0) {
+              stateColor = 'blue'
+            }
+          }
+          else {
+            stateColor = 'green'
+          }
+          i += 1
+          return ({
+            strokeColor: 'black',
+            fillColor: stateColor,
+            strokeWeight: 3,
+            fillOpacity: 1
+          });
         });
-      });
-
+      }
       map.data.addListener('click', (event) => {
+        let selState = states[Number(event.feature.getProperty('stateId'))]
         alert(
           event.feature.getProperty('STUSPS') + ": \n" + 
-          'Total positive cases: ' + event.feature.getProperty('positive') + '\n' +
-          'Increase of positive cases: ' + event.feature.getProperty('positiveIncrease') + '\n' +
-          'Total deaths: ' + event.feature.getProperty('death') + '\n'
+          'Total positive cases: ' + selState.positive + '\n' +
+          'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
+          'Total deaths: ' + selState.death + '\n'
         )
       })
     }
@@ -256,6 +287,7 @@ class App extends React.Component {
         formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
       })
     }
+    // get new state info and render
   } 
 
   render() {

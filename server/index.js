@@ -16,18 +16,36 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+let states = ['al','ar','az','ca','co','ct','dc','de','fl','ga','ia','id','il','in','ks','ky','la','ma','md','me','mi','mn','mo','ms','mt','nc','nd','ne','nh','nj','nm','nv','ny','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','va','vt','wa','wi','wv','wy']
+
+app.get('/data', (req, res) => {
+  Promise.all(states.map(async state => {
+    let covidInfo = await axios.get(`https://covidtracking.com/api/v1/states/${state}/${req.query.date}.json`)
+    let stateInfo = {
+      state: covidInfo.data.state,
+      // date: covidInfo.data.date,
+      positiveIncrease: covidInfo.data.positiveIncrease,
+      positive: covidInfo.data.positive,
+      death: covidInfo.data.death,
+    }
+    return stateInfo
+  }))
+    .then((data) => res.send(data))
+    .catch(console.log)
+})
+
 app.get('/map', (req, res) => {
   let geoJSON = JSON.parse(fs.readFileSync(path.join(__dirname + '/states.json')));
-  Promise.all(geoJSON.features.map(async state => {
-    let info = await axios.get(`https://covidtracking.com/api/v1/states/${state.properties.STUSPS.toLowerCase()}/${req.query.date}.json`)
-    state.properties.date = info.data.date;
-    state.properties.positiveIncrease = info.data.positiveIncrease;
-    state.properties.positive = info.data.positive;
-    state.properties.death = info.data.death;
-  }))
-  .then(() => res.json(geoJSON)) 
-  .catch(console.log)
-  // res.json(geoJSON)
+  // Promise.all(geoJSON.features.map(async state => {
+  //   let info = await axios.get(`https://covidtracking.com/api/v1/states/${state.properties.STUSPS.toLowerCase()}/${req.query.date}.json`)
+  //   state.properties.date = info.data.date;
+  //   state.properties.positiveIncrease = info.data.positiveIncrease;
+  //   state.properties.positive = info.data.positive;
+  //   state.properties.death = info.data.death;
+  // }))
+  // .then(() => res.json(geoJSON)) 
+  // .catch(console.log)
+  res.json(geoJSON)
 });
 
 module.exports = app;
