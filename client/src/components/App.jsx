@@ -13,8 +13,8 @@ class App extends React.Component {
         center: {lat: 38.314599, lng: -96.139676},
         zoom: 5,
         gestureHandling: 'none',
-        zoomControl: false,
-        mapTypeControlOptions: { mapTypeIds: [] },
+        // zoomControl: false,
+        // mapTypeControlOptions: { mapTypeIds: [] },
         disableDefaultUI: true,
         draggableCursor: 'default',
         styles: [
@@ -31,25 +31,7 @@ class App extends React.Component {
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "administrative.country",
-            "elementType": "geometry.stroke",
-            "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              },
-              {
-                "weight": 1.5
+                "visibility": "off"
               }
             ]
           },
@@ -59,9 +41,6 @@ class App extends React.Component {
             "stylers": [
               {
                 "color": "#000000"
-              },
-              {
-                "visibility": "on"
               }
             ]
           },
@@ -82,86 +61,6 @@ class App extends React.Component {
             ]
           },
           {
-            "featureType": "road",
-            "elementType": "geometry.fill",
-            "stylers": [
-              {
-                "color": "#2c2c2c"
-              }
-            ]
-          },
-          {
-            "featureType": "road",
-            "elementType": "labels.icon",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "road",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#8a8a8a"
-              }
-            ]
-          },
-          {
-            "featureType": "road.arterial",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#373737"
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#3c3c3c"
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway.controlled_access",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#4e4e4e"
-              }
-            ]
-          },
-          {
-            "featureType": "road.local",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#616161"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#757575"
-              }
-            ]
-          },
-          {
             "featureType": "water",
             "elementType": "geometry",
             "stylers": [
@@ -170,27 +69,6 @@ class App extends React.Component {
               }
             ]
           },
-          {
-            "featureType": "water",
-            "elementType": "geometry.fill",
-            "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "water",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#3d3d3d"
-              }
-            ]
-          }
         ]
       });
     
@@ -212,7 +90,7 @@ class App extends React.Component {
         new google.maps.Marker({
           position: latLng,
           map: map,
-          icon: './images/marker3.gif',
+          icon: './images/circle.gif',
         });
       });
     };
