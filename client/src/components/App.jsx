@@ -221,9 +221,9 @@ class App extends React.Component {
           stateColor = 'blue'
         }
         return ({
-          strokeColor: stateColor,
+          strokeColor: 'black',
           fillColor: stateColor,
-          // strokeWeight: 3,
+          strokeWeight: 3,
           fillOpacity: 1
         });
       });
