@@ -241,20 +241,24 @@ class App extends React.Component {
           if (states) {
             let selState = states[feature.getProperty('stateId')]
             if (selState.positiveIncrease > 1000) {
-              stateColor = 'red'
+              // stateColor = '#A91101'
+              stateColor = '#1B4D3E'
             }
             if (selState.positiveIncrease < 1000 && selState.positiveIncrease > 100) {
-              stateColor = 'orange'
+              // stateColor = '#e4181e'
+              stateColor = '#00693E'
             }
             if (selState.positiveIncrease < 100) {
-              stateColor = 'yellow'
+              // stateColor = '#FF6347'
+              stateColor = '#018749'
             }
             if (selState.positiveIncrease === 0) {
-              stateColor = 'blue'
+              // stateColor = '#F88379'
+              stateColor = '#3CB371'
             }
           }
           else {
-            stateColor = 'green'
+            stateColor = 'black'
           }
           return ({
             strokeColor: 'black',
