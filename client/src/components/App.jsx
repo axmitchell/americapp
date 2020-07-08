@@ -187,6 +187,28 @@ class App extends React.Component {
       <div id='content' onKeyDown={this.changeDate}>
         <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}</div>
         <div id="map"></div>
+        <div id="key">
+          <table style={{width: '200px'}}>
+            <tbody>
+              <tr>
+              <td style={{backgroundColor: '#1B4D3E', width: '40px', height: '40px'}}>&nbsp;</td>
+              <td>1000+ cases</td>
+              </tr>
+              <tr>
+              <td style={{backgroundColor: '#00693E', width: '40px', height: '40px'}}>&nbsp;</td>
+              <td>100-9999 cases;</td>
+              </tr>
+              <tr>
+              <td style={{backgroundColor: '#018749', width: '40px', height: '40px'}}>&nbsp;</td>
+              <td>1-99 cases</td>
+              </tr>
+              <tr>
+              <td style={{backgroundColor: '#3CB371', width: '40px', height: '40px'}}>&nbsp;</td>
+              <td>0 cases</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }
