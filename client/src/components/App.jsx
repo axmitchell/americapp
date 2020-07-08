@@ -267,9 +267,7 @@ class App extends React.Component {
             fillOpacity: 1
           });
         });
-        //?????????????????
         google.maps.event.clearListeners(map.data, 'click');
-        //?????????????????
         map.data.addListener('click', (event) => {
           let selState = states[Number(event.feature.getProperty('stateId'))]
           alert(

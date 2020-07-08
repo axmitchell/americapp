@@ -36,15 +36,6 @@ app.get('/data', (req, res) => {
 
 app.get('/map', (req, res) => {
   let geoJSON = JSON.parse(fs.readFileSync(path.join(__dirname + '/states.json')));
-  // Promise.all(geoJSON.features.map(async state => {
-  //   let info = await axios.get(`https://covidtracking.com/api/v1/states/${state.properties.STUSPS.toLowerCase()}/${req.query.date}.json`)
-  //   state.properties.date = info.data.date;
-  //   state.properties.positiveIncrease = info.data.positiveIncrease;
-  //   state.properties.positive = info.data.positive;
-  //   state.properties.death = info.data.death;
-  // }))
-  // .then(() => res.json(geoJSON)) 
-  // .catch(console.log)
   res.json(geoJSON)
 });
 
