@@ -23,7 +23,7 @@ app.get('/data', (req, res) => {
     let covidInfo = await axios.get(`https://covidtracking.com/api/v1/states/${state}/${req.query.date}.json`)
     let stateInfo = {
       state: covidInfo.data.state,
-      date: covidInfo.data.date,
+      lastUpdate: covidInfo.data.lastUpdateEt,
       positiveIncrease: covidInfo.data.positiveIncrease,
       positive: covidInfo.data.positive,
       death: covidInfo.data.death,

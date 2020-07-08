@@ -149,7 +149,8 @@ class App extends React.Component {
         map.data.addListener('click', (event) => {
           let selState = states[Number(event.feature.getProperty('stateId'))]
           alert(
-            event.feature.getProperty('STUSPS') + " (" + new Date(selState.date) + ") : \n" + 
+            event.feature.getProperty('STUSPS')  + '\n' + 
+            'Last Updated: ' + selState.lastUpdate + '\n' + 
             'Total positive cases: ' + selState.positive + '\n' +
             'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
             'Total deaths: ' + selState.death + '\n'

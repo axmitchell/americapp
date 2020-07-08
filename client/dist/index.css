@@ -30,7 +30,7 @@ h3 {
   position: absolute;
   font-size: 70px;
   color: #00693E;
-  top: 650px;
+  top: 630px;
   left: 50px;
   z-index: 5;
   font-family: 'Roboto','sans-serif';
@@ -58,3 +58,6 @@ table, tr, td {
   border: 1px solid #00693E;
 }
 
+table {
+  width: 200px;
+}
