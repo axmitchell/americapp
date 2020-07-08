@@ -189,7 +189,7 @@ class App extends React.Component {
         <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}<br/><div id='title'>DAILY COVID UPDATES</div></div>
         <div id="map"></div>
         <div id="key">
-          <table style={{width: '200px'}}>
+          <table>
             <tbody>
               <tr>
               <td className='keyIcon' style={{backgroundColor: '#1B4D3E'}}>&nbsp;</td>
