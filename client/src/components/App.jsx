@@ -14,7 +14,14 @@ class App extends React.Component {
     this.getStateInfo = this.getStateInfo.bind(this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.date !== this.state.date) {
+      this.getStateInfo()
+    }
+  }
+
   getStateInfo() {
+    console.log(`getting state info for date: ${this.state.formattedDate}`)
     let states
     axios.get(`/data?date=${this.state.formattedDate}`)
       .then(res => {
@@ -262,7 +269,7 @@ class App extends React.Component {
         map.data.addListener('click', (event) => {
           let selState = states[Number(event.feature.getProperty('stateId'))]
           alert(
-            event.feature.getProperty('STUSPS') + ": \n" + 
+            event.feature.getProperty('STUSPS') + " (" + new Date(selState.date) + ") : \n" + 
             'Total positive cases: ' + selState.positive + '\n' +
             'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
             'Total deaths: ' + selState.death + '\n'
@@ -274,22 +281,24 @@ class App extends React.Component {
   }
 
   changeDate(e) {
+    let newDate
     const { date } = this.state
     if (e.keyCode === 37) {
-      date.setDate(date.getDate() - 1);
+      newDate = new Date(date.setDate(date.getDate() - 1))
+      console.log(newDate)
       this.setState({
-        date: date,
-        formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+        date: newDate,
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
       })
     } 
     else if (e.keyCode === 39 && '' + date.getMonth() + date.getDate() !== '' + new Date().getMonth() + new Date().getDate()) {
-      date.setDate(date.getDate() + 1);
+      newDate = new Date(date.setDate(date.getDate() + 1))
+      console.log(newDate)
       this.setState({
-        date: date,
-        formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+        date: newDate,
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
       })
     }
-    this.getStateInfo()
   } 
 
   render() {
