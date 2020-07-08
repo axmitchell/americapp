@@ -1,17 +1,55 @@
 import React from 'react';
+import axios from 'axios';
 
+const date = new Date()
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      state: ''
+      states: [],
+      date: date,
+      formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+    }
+    this.changeDate = this.changeDate.bind(this)
+    this.getStateInfo = this.getStateInfo.bind(this)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.date !== this.state.date) {
+      this.getStateInfo()
     }
   }
 
+  getStateInfo() {
+    console.log(`getting state info for date: ${this.state.formattedDate}`)
+    let states
+    axios.get(`/data?date=${this.state.formattedDate}`)
+      .then(res => {
+        states = res.data
+        this.setState({
+          states: res.data
+        });
+        console.log('got state info')
+      })
+      .then(() => styleMap(states))
+      .catch(console.log)
+  }
+
   componentDidMount() {
-    let state;
+    let states
+    axios.get(`/data?date=${this.state.formattedDate}`)
+      .then(res => {
+        states = res.data
+        this.setState({
+          states: res.data
+        });
+        console.log('got state info')
+      })
+      .then(() => styleMap(states))
+      .catch(console.log)
     const initMap = () => {
-      var map = new google.maps.Map(document.getElementById('map'), {
+      console.log('initializing map')
+      global.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
         zoom: 5,
         gestureHandling: 'none',
@@ -33,25 +71,7 @@ class App extends React.Component {
             "elementType": "geometry",
             "stylers": [
               {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "administrative.country",
-            "elementType": "geometry.stroke",
-            "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              },
-              {
-                "weight": 1.5
+                "visibility": "off"
               }
             ]
           },
@@ -61,9 +81,6 @@ class App extends React.Component {
             "stylers": [
               {
                 "color": "#000000"
-              },
-              {
-                "visibility": "on"
               }
             ]
           },
@@ -84,86 +101,6 @@ class App extends React.Component {
             ]
           },
           {
-            "featureType": "road",
-            "elementType": "geometry.fill",
-            "stylers": [
-              {
-                "color": "#2c2c2c"
-              }
-            ]
-          },
-          {
-            "featureType": "road",
-            "elementType": "labels.icon",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "road",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#8a8a8a"
-              }
-            ]
-          },
-          {
-            "featureType": "road.arterial",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#373737"
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#3c3c3c"
-              }
-            ]
-          },
-          {
-            "featureType": "road.highway.controlled_access",
-            "elementType": "geometry",
-            "stylers": [
-              {
-                "color": "#4e4e4e"
-              }
-            ]
-          },
-          {
-            "featureType": "road.local",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#616161"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#757575"
-              }
-            ]
-          },
-          {
             "featureType": "water",
             "elementType": "geometry",
             "stylers": [
@@ -172,70 +109,85 @@ class App extends React.Component {
               }
             ]
           },
-          {
-            "featureType": "water",
-            "elementType": "geometry.fill",
-            "stylers": [
-              {
-                "color": "#000000"
-              },
-              {
-                "visibility": "on"
-              }
-            ]
-          },
-          {
-            "featureType": "water",
-            "elementType": "labels.text.fill",
-            "stylers": [
-              {
-                "color": "#3d3d3d"
-              }
-            ]
-          }
         ]
       });
-    
-      map.data.loadGeoJson('http://localhost:3001/');
-    
-      map.data.setStyle(function(feature) {
-        if (feature.getProperty('isSelected')) {
+      map.data.loadGeoJson(`http://localhost:3000/map`);
+      global.styleMap = (states) => {
+        console.log('adding style')
+        map.data.setStyle(function(feature) {
+          let stateColor
+          if (states) {
+            let selState = states[feature.getProperty('stateId')]
+            if (selState.positiveIncrease > 1000) {
+              // stateColor = '#A91101'
+              stateColor = '#1B4D3E'
+            }
+            if (selState.positiveIncrease < 1000 && selState.positiveIncrease > 100) {
+              // stateColor = '#e4181e'
+              stateColor = '#00693E'
+            }
+            if (selState.positiveIncrease < 100) {
+              // stateColor = '#FF6347'
+              stateColor = '#018749'
+            }
+            if (selState.positiveIncrease === 0) {
+              // stateColor = '#F88379'
+              stateColor = '#3CB371'
+            }
+          }
+          else {
+            stateColor = 'black'
+          }
           return ({
-            strokeColor: 'green',
-            fillColor: 'purple',
-            strokeWeight: 3
+            strokeColor: 'black',
+            fillColor: stateColor,
+            strokeWeight: 3,
+            fillOpacity: 1
           });
-        }
-        return ({
-          strokeColor: 'green',
-          strokeWeight: 3
         });
-      });
-
-      map.data.addListener('mouseover', function(event) {
-        event.feature.setProperty('isSelected', true);
-        state = event.feature.getProperty('NAME')
-        setState(state)
-      });
-
-      map.data.addListener('mouseout', function(event) {
-        event.feature.setProperty('isSelected', false);
-        setState('')
-      });
-       
-    };
-    const setState = (state) => {
-      this.setState({
-        state
-      })
+        google.maps.event.clearListeners(map.data, 'click');
+        map.data.addListener('click', (event) => {
+          let selState = states[Number(event.feature.getProperty('stateId'))]
+          alert(
+            event.feature.getProperty('STUSPS') + " (" + new Date(selState.date) + ") : \n" + 
+            'Total positive cases: ' + selState.positive + '\n' +
+            'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
+            'Total deaths: ' + selState.death + '\n'
+          )
+        })
+      }
     }
-
     window.initMap = initMap.bind(this);
   }
 
+  changeDate(e) {
+    let newDate
+    const { date } = this.state
+    if (e.keyCode === 37) {
+      newDate = new Date(date.setDate(date.getDate() - 1))
+      console.log(newDate)
+      this.setState({
+        date: newDate,
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
+      })
+    } 
+    else if (e.keyCode === 39 && '' + date.getMonth() + date.getDate() !== '' + new Date().getMonth() + new Date().getDate()) {
+      newDate = new Date(date.setDate(date.getDate() + 1))
+      console.log(newDate)
+      this.setState({
+        date: newDate,
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
+      })
+    }
+  } 
+
   render() {
+    const { formattedDate } = this.state
     return (
-      <div id="map"></div>
+      <div id='content' onKeyDown={this.changeDate}>
+        <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}</div>
+        <div id="map"></div>
+      </div>
     )
   }
 };

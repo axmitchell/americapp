@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack -d --watch",
-    "boot": "nodemon -r dotenv/config ./server/connection.js",
-    "bootStates": "nodemon ./statesServer/connection.js"
+    "boot": "nodemon ./server/connection.js"
   },
   "keywords": [],
   "author": "",
