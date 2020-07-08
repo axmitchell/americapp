@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const app = express();
+const db = require('../database/model.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
 
@@ -19,24 +20,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 let states = ['al','ar','az','ca','co','ct','dc','de','fl','ga','ia','id','il','in','ks','ky','la','ma','md','me','mi','mn','mo','ms','mt','nc','nd','ne','nh','nj','nm','nv','ny','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','va','vt','wa','wi','wv','wy']
 
 app.get('/data', (req, res) => {
-  Promise.all(states.map(async state => {
-    let covidInfo = await axios.get(`https://covidtracking.com/api/v1/states/${state}/${req.query.date}.json`)
-    let stateInfo = {
-      state: covidInfo.data.state,
-      lastUpdate: covidInfo.data.lastUpdateEt,
-      positiveIncrease: covidInfo.data.positiveIncrease,
-      positive: covidInfo.data.positive,
-      death: covidInfo.data.death,
-    }
-    return stateInfo
-  }))
-    .then((data) => res.send(data))
-    .catch(console.log)
-})
+  db.History.findAll({ where: {date: req.query.date }})
+    .then(data => res.send(data))
+    .catch(console.log);
+  // Promise.all(states.map(async state => {
+  //   let covidInfo = await axios.get(`https://covidtracking.com/api/v1/states/${state}/${req.query.date}.json`)
+  //   let stateInfo = {
+  //     state: covidInfo.data.state,
+  //     lastUpdate: covidInfo.data.lastUpdateEt,
+  //     positiveIncrease: covidInfo.data.positiveIncrease,
+  //     positive: covidInfo.data.positive,
+  //     death: covidInfo.data.death,
+  //   }
+  //   return stateInfo
+  // }))
+  //   .then((data) => res.send(data))
+  //   .catch(console.log)
+});
 
 app.get('/map', (req, res) => {
   let geoJSON = JSON.parse(fs.readFileSync(path.join(__dirname + '/states.json')));
-  res.json(geoJSON)
+  res.json(geoJSON);
 });
 
 module.exports = app;
