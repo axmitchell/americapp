@@ -11,24 +11,11 @@ class App extends React.Component {
       formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
     }
     this.changeDate = this.changeDate.bind(this)
-    this.addStateInfo = this.addStateInfo.bind(this)
+    this.getStateInfo = this.getStateInfo.bind(this)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-  //   map.data.forEach(function(feature, index) {
-  //     //find new state info and add to properties
-  //             // map.data.remove(feature);
-  //     styleMap(feature)
-  //   });
-  //   // map.data.loadGeoJson(`http://localhost:3000/map?date=${this.state.formattedDate}`);
-  }
-
-  addStateInfo(feature, index) {
-    feature.setProperty('positiveIncrease', this.state.states[index].positiveIncrease)
-  }
-
-componentDidMount() {
-  let states
+  getStateInfo() {
+    let states
     axios.get(`/data?date=${this.state.formattedDate}`)
       .then(res => {
         states = res.data
@@ -37,7 +24,21 @@ componentDidMount() {
         });
         console.log('got state info')
       })
-      .then(() => styleMap())
+      .then(() => styleMap(states))
+      .catch(console.log)
+  }
+
+  componentDidMount() {
+    let states
+    axios.get(`/data?date=${this.state.formattedDate}`)
+      .then(res => {
+        states = res.data
+        this.setState({
+          states: res.data
+        });
+        console.log('got state info')
+      })
+      .then(() => styleMap(states))
       .catch(console.log)
     const initMap = () => {
       console.log('initializing map')
@@ -226,8 +227,7 @@ componentDidMount() {
         ]
       });
       map.data.loadGeoJson(`http://localhost:3000/map`);
-      let i = 0
-      global.styleMap = () => {
+      global.styleMap = (states) => {
         console.log('adding style')
         map.data.setStyle(function(feature) {
           let stateColor
@@ -249,7 +249,6 @@ componentDidMount() {
           else {
             stateColor = 'green'
           }
-          i += 1
           return ({
             strokeColor: 'black',
             fillColor: stateColor,
@@ -257,16 +256,19 @@ componentDidMount() {
             fillOpacity: 1
           });
         });
+        //?????????????????
+        google.maps.event.clearListeners(map.data, 'click');
+        //?????????????????
+        map.data.addListener('click', (event) => {
+          let selState = states[Number(event.feature.getProperty('stateId'))]
+          alert(
+            event.feature.getProperty('STUSPS') + ": \n" + 
+            'Total positive cases: ' + selState.positive + '\n' +
+            'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
+            'Total deaths: ' + selState.death + '\n'
+          )
+        })
       }
-      map.data.addListener('click', (event) => {
-        let selState = states[Number(event.feature.getProperty('stateId'))]
-        alert(
-          event.feature.getProperty('STUSPS') + ": \n" + 
-          'Total positive cases: ' + selState.positive + '\n' +
-          'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
-          'Total deaths: ' + selState.death + '\n'
-        )
-      })
     }
     window.initMap = initMap.bind(this);
   }
@@ -287,7 +289,7 @@ componentDidMount() {
         formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
       })
     }
-    // get new state info and render
+    this.getStateInfo()
   } 
 
   render() {
