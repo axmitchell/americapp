@@ -2,13 +2,14 @@ import React from 'react';
 import axios from 'axios';
 
 const date = new Date()
+const formattedDate = '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       states: [],
       date: date,
-      formattedDate: '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+      formattedDate: formattedDate,
     }
     this.changeDate = this.changeDate.bind(this)
     this.getStateInfo = this.getStateInfo.bind(this)
@@ -36,17 +37,18 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let states
-    axios.get(`/data?date=${this.state.formattedDate}`)
-      .then(res => {
-        states = res.data
-        this.setState({
-          states: res.data
-        });
-        console.log('got state info')
-      })
-      .then(() => styleMap(states))
-      .catch(console.log)
+    // let states
+    // axios.get(`/data?date=${this.state.formattedDate}`)
+    //   .then(res => {
+    //     states = res.data
+    //     this.setState({
+    //       states: res.data
+    //     });
+    //     console.log('got state info')
+    //   })
+    //   .then(() => styleMap(states))
+    //   .catch(console.log)
+    this.getStateInfo();
     const initMap = () => {
       console.log('initializing map')
       global.map = new google.maps.Map(document.getElementById('map'), {
@@ -136,7 +138,7 @@ class App extends React.Component {
             }
           }
           else {
-            stateColor = 'black'
+            stateColor = 'white'
           }
           return ({
             strokeColor: 'black',
@@ -169,7 +171,7 @@ class App extends React.Component {
       console.log(newDate)
       this.setState({
         date: newDate,
-        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + (newDate.getMonth() + 1) : (newDate.getMonth() + 1)) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
       })
     } 
     else if (e.keyCode === 39 && '' + date.getMonth() + date.getDate() !== '' + new Date().getMonth() + new Date().getDate()) {
@@ -177,7 +179,7 @@ class App extends React.Component {
       console.log(newDate)
       this.setState({
         date: newDate,
-        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getMonth()) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
+        formattedDate: '' + newDate.getFullYear() + (newDate.getMonth() < 10 ? '0' + (newDate.getMonth() + 1) : (newDate.getMonth() + 1)) + (newDate.getDate() < 10 ? '0' + newDate.getDate() : newDate.getDate())
       })
     }
   } 
@@ -188,28 +190,26 @@ class App extends React.Component {
       <div id='content' onKeyDown={this.changeDate}>
         <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}<br/><div id='title'>DAILY COVID UPDATES</div></div>
         <div id="map"></div>
-        <div id="key">
-          <table>
-            <tbody>
-              <tr>
-              <td className='keyIcon' style={{backgroundColor: '#1B4D3E'}}>&nbsp;</td>
-              <td className='keyDescriptions'>1000+ cases</td>
-              </tr>
-              <tr>
-              <td className='keyIcon' style={{backgroundColor: '#00693E'}}>&nbsp;</td>
-              <td className='keyDescriptions'>100-999 cases;</td>
-              </tr>
-              <tr>
-              <td className='keyIcon' style={{backgroundColor: '#018749'}}>&nbsp;</td>
-              <td className='keyDescriptions'> 1-99 cases</td>
-              </tr>
-              <tr>
-              <td className='keyIcon' style={{backgroundColor: '#3CB371'}}>&nbsp;</td>
-              <td className='keyDescriptions'>0 cases</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table id="key">
+          <tbody>
+            <tr>
+            <td className='keyIcon' style={{backgroundColor: '#1B4D3E'}}>&nbsp;</td>
+            <td className='keyDescriptions'>1000+ cases</td>
+            </tr>
+            <tr>
+            <td className='keyIcon' style={{backgroundColor: '#00693E'}}>&nbsp;</td>
+            <td className='keyDescriptions'>100-999 cases;</td>
+            </tr>
+            <tr>
+            <td className='keyIcon' style={{backgroundColor: '#018749'}}>&nbsp;</td>
+            <td className='keyDescriptions'> 1-99 cases</td>
+            </tr>
+            <tr>
+            <td className='keyIcon' style={{backgroundColor: '#3CB371'}}>&nbsp;</td>
+            <td className='keyDescriptions'>0 cases</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     )
   }
