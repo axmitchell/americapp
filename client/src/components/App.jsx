@@ -118,13 +118,18 @@ class App extends React.Component {
         console.log('adding style')
         map.data.setStyle(function(feature) {
           let stateColor
-          if (states) {
-            let selState = states[feature.getProperty('stateId')]
-            if (selState.positiveIncrease > 1000) {
+          ////////////
+          // console.log(states)
+          // console.log(feature.getProperty('stateId'))
+          // console.log(states[feature.getProperty('stateId')])
+          let selState = states[feature.getProperty('stateId')]
+          ////////////
+          if (selState) {
+            if (selState.positiveIncrease >= 1000) {
               // stateColor = '#A91101'
               stateColor = '#1B4D3E'
             }
-            if (selState.positiveIncrease < 1000 && selState.positiveIncrease > 100) {
+            if (selState.positiveIncrease < 1000 && selState.positiveIncrease >= 100) {
               // stateColor = '#e4181e'
               stateColor = '#00693E'
             }
@@ -138,7 +143,7 @@ class App extends React.Component {
             }
           }
           else {
-            stateColor = 'white'
+            stateColor = 'black'
           }
           return ({
             strokeColor: 'black',
@@ -149,13 +154,16 @@ class App extends React.Component {
         });
         google.maps.event.clearListeners(map.data, 'click');
         map.data.addListener('click', (event) => {
+          /////////////////////
           let selState = states[Number(event.feature.getProperty('stateId'))]
+          ////////////////////
           alert(
-            event.feature.getProperty('STUSPS')  + '\n' + 
-            'Last Updated: ' + selState.lastUpdateEt + '\n' + 
-            'Total positive cases: ' + selState.positive + '\n' +
+            selState.state  + '\n' + 
             'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
-            'Total deaths: ' + selState.death + '\n'
+            'Total positive cases: ' + selState.positive + '\n' +
+            'Total deaths: ' + selState.death + '\n' +
+            'State\'s Data Reporting Grade: ' + selState.dataQualityGrade + '\n' +
+            'Last Updated: ' + selState.lastUpdateEt
           )
         })
       }
@@ -166,7 +174,7 @@ class App extends React.Component {
   changeDate(e) {
     let newDate
     const { date } = this.state
-    if (e.keyCode === 37) {
+    if (e.keyCode === 37 && '' + date.getMonth() + date.getDate() !== '023') {
       newDate = new Date(date.setDate(date.getDate() - 1))
       console.log(newDate)
       this.setState({

@@ -21,7 +21,16 @@ let states = ['al','ar','az','ca','co','ct','dc','de','fl','ga','ia','id','il','
 
 app.get('/data', (req, res) => {
   db.History.findAll({ where: {date: req.query.date }})
-    .then(data => res.send(data))
+    .then(data => {
+      let results = [];
+      data.forEach(state => {
+        if (states.indexOf(state.state.toLowerCase()) === -1) {
+          return;
+        }
+        results[states.indexOf(state.state.toLowerCase())] = state;
+      });
+      res.send(results);
+    })
     .catch(console.log);
   // Promise.all(states.map(async state => {
   //   let covidInfo = await axios.get(`https://covidtracking.com/api/v1/states/${state}/${req.query.date}.json`)
