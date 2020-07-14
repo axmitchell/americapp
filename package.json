@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack -d --watch",
-    "boot": "nodemon ./server/connection.js",
+    "boot-prod": "node ./server/connection.js",
+    "boot-dev": "nodemon ./server/connection.js",
     "seed": "node ./database/utils/seed.js"
   },
   "keywords": [],

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Key from './Key.jsx'
 
 const date = new Date()
 const formattedDate = '' + date.getFullYear() + (date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
@@ -201,6 +202,8 @@ class App extends React.Component {
       }
     }
     window.initMap = initMap.bind(this);
+    // document.getElementById('content').focus()
+    // console.log(document.activeElement)
   }
 
   changeDate(e) {
@@ -230,26 +233,7 @@ class App extends React.Component {
       <div id='content' onKeyDown={this.changeDate}>
         <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}<br/><div id='title'>DAILY COVID UPDATES</div></div>
         <div id="map"></div>
-        <table id="key">
-          <tbody>
-            <tr>
-            <td className='keyIcon' style={{backgroundColor: '#1B4D3E'}}>&nbsp;</td>
-            <td className='keyDescriptions'>1000+ cases</td>
-            </tr>
-            <tr>
-            <td className='keyIcon' style={{backgroundColor: '#00693E'}}>&nbsp;</td>
-            <td className='keyDescriptions'>100-999 cases;</td>
-            </tr>
-            <tr>
-            <td className='keyIcon' style={{backgroundColor: '#018749'}}>&nbsp;</td>
-            <td className='keyDescriptions'> 1-99 cases</td>
-            </tr>
-            <tr>
-            <td className='keyIcon' style={{backgroundColor: '#3CB371'}}>&nbsp;</td>
-            <td className='keyDescriptions'>0 cases</td>
-            </tr>
-          </tbody>
-        </table>
+        <Key />
       </div>
     )
   }
