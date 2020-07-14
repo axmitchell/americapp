@@ -38,6 +38,10 @@ Install and start postgresql database if not already installed:
 
 Fill out .envTemplate and rename to .env
 
+Get a Google Maps api key [here](https://developers.google.com/maps/documentation/javascript/get-api-key).
+
+In client/dist/index.html, replace `YOUR_KEY_HERE` in the final script tag with your api key. 
+
 ---
 ### scripts
 
