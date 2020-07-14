@@ -5,7 +5,7 @@ Just wanted to mess around with GeoJSON and Google maps' api.
 Use the left and right arrow keys to navigate through daily visual covid updates for the continental U.S.. 
 Click on a state to get specific numbers. 
 
-#####Known bugs as of 7/14/20: 
+##### Known bugs as of 7/14/20: 
 * The map will render black if data isn't available yet for the current day.
 * Due to issues reassigning element focus, a user must first click anywhere on the screen to enable key-press navigation of the daily heat map timeline.
 
