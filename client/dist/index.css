@@ -61,3 +61,62 @@ table, tr, td {
 table {
   width: 200px;
 }
+
+@media screen and (width: 1920px) {
+  #key {
+    top: 800px;
+    font-size: 20px
+  }
+  #date {
+    top: 900px;
+  }
+  table {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media screen and (width: 1280px) {
+  #key {
+    top: 580px;
+    right: 30px;
+    font-size: 20px
+  }
+  #date {
+    top: 650px;
+  }
+}
+
+@media screen and (width: 568px), (width: 667px) {
+  #key {
+    display: none
+  }
+  #date {
+    display: none
+  }
+}
+
+@media screen and (width: 1024px) {
+  #key {
+    top: 550px;
+    right: 20px;
+    font-size: 20px;
+}
+  #date {
+    top: 620px;
+  }
+  table {
+    width: 180px;
+    height: 180px
+  }
+}
+
+a[href^="http://maps.google.com/maps"]{display:none !important}
+a[href^="https://maps.google.com/maps"]{display:none !important}
+
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+    display:none;
+}
+.gmnoprint div {
+    background:none !important;
+}
