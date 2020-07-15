@@ -54,21 +54,22 @@ class App extends React.Component {
       let zoom = 5
       if (screen.width <= 568) {
         zoom = 3.7
-      } else if (screen.width === 667) {
+      } else if (screen.width <= 667) {
         zoom = 3.9
-      } else if (screen.width === 736) {
+      } else if (screen.width <= 736) {
         zoom = 4.1
-      } else if (screen.width === 812) {
+      } else if (screen.width <= 812) {
         zoom = 4
-      } else if (screen.width === 1024) {
+      } else if (screen.width <= 1024) {
         zoom = 4.6
-      } else if (screen.width === 1366) {
-        zoom = 5
-      } else if (screen.width === 1920) {
-        zoom = 5.5
-      } else if (screen.width === 1280) {
+      } else if (screen.width <= 1280) {
         zoom = 4.9
+      } else if (screen.width <= 1440) {
+        zoom = 5
+      } else if (screen.width <= 1920) {
+        zoom = 5.5
       }
+      console.log(screen.width)
       console.log('initializing map')
       global.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
@@ -177,13 +178,13 @@ class App extends React.Component {
           google.maps.event.trigger(map, 'resize');
           // map.setCenter(currCenter);
         };
-        google.maps.event.clearListeners(map.data, 'click');
+        // google.maps.event.clearListeners(map.data, 'click');
         // let exampleCoords = [{'lat': 31.34294, 'lng': -96.0957}, {'lat': 43.123, 'lng': -108.244}, {'lat': 40.737, 'lng': -77.462}]
         // exampleCoords.forEach(coord => {
         //   new google.maps.Marker({
         //     position: coord,
         //     map: map,
-        //     icon: './images/marker.gif',
+        //     icon: './images/covid.gif',
         //   });
         // })
         map.data.addListener('click', (event) => {
