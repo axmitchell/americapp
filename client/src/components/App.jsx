@@ -178,7 +178,7 @@ class App extends React.Component {
           google.maps.event.trigger(map, 'resize');
           // map.setCenter(currCenter);
         };
-        // google.maps.event.clearListeners(map.data, 'click');
+        google.maps.event.clearListeners(map.data, 'click');
         // let exampleCoords = [{'lat': 31.34294, 'lng': -96.0957}, {'lat': 43.123, 'lng': -108.244}, {'lat': 40.737, 'lng': -77.462}]
         // exampleCoords.forEach(coord => {
         //   new google.maps.Marker({
@@ -189,6 +189,7 @@ class App extends React.Component {
         // })
         map.data.addListener('click', (event) => {
           /////////////////////
+          console.log('hi')
           let selState = states[Number(event.feature.getProperty('stateId'))]
           ////////////////////
           alert(
