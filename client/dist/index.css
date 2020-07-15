@@ -13,12 +13,6 @@ h3 {
   margin: 0px;
 }
 
-#title {
-  position: absolute;
-  font-size: 30px;
-  color: #00693E;
-  font-family: 'Roboto','sans-serif';
-}
 
 #map {
   width: 100%;
@@ -26,13 +20,28 @@ h3 {
   position: absolute;
 }
 
-#date {
+#header {
+  display: grid;
+  grid-template-areas: 
+  "date"
+  "title";
   position: absolute;
-  font-size: 70px;
-  color: #00693E;
   top: 630px;
   left: 50px;
   z-index: 5;
+}
+
+#date {
+  grid-area: date;
+  font-size: 70px;
+  color: #00693E;
+  font-family: 'Roboto','sans-serif';
+}
+
+#title {
+  grid-area: title;
+  font-size: 30px;
+  color: #00693E;
   font-family: 'Roboto','sans-serif';
 }
 
@@ -67,7 +76,7 @@ table {
     top: 800px;
     font-size: 20px
   }
-  #date {
+  #header {
     top: 900px;
   }
   table {
@@ -82,7 +91,7 @@ table {
     right: 30px;
     font-size: 20px
   }
-  #date {
+  #header {
     top: 650px;
   }
 }
@@ -91,7 +100,7 @@ table {
   #key {
     display: none
   }
-  #date {
+  #header {
     display: none
   }
 }
@@ -101,8 +110,8 @@ table {
     top: 550px;
     right: 20px;
     font-size: 20px;
-}
-  #date {
+  }
+  #header {
     top: 620px;
   }
   table {

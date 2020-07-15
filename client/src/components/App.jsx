@@ -9,7 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       states: [],
-      date: date,
+      date: new Date(),
       formattedDate: formattedDate,
     }
     this.changeDate = this.changeDate.bind(this)
@@ -18,38 +18,51 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.date !== this.state.date) {
-      this.getStateInfo()
+      this.getStateInfo(prepareMap)
     }
   }
 
-  getStateInfo() {
-    console.log(`getting state info for date: ${this.state.formattedDate}`)
-    let states
-    axios.get(`/data?date=${this.state.formattedDate}`)
-      .then(res => {
-        states = res.data
-        this.setState({
-          states: res.data
-        });
-        console.log('got state info')
-      })
-      .then(() => styleMap(states))
-      .catch(console.log)
-  }
-
   componentDidMount() {
-    // let states
-    // axios.get(`/data?date=${this.state.formattedDate}`)
-    //   .then(res => {
-    //     states = res.data
-    //     this.setState({
-    //       states: res.data
-    //     });
-    //     console.log('got state info')
-    //   })
-    //   .then(() => styleMap(states))
-    //   .catch(console.log)
-    this.getStateInfo();
+    global.prepareMap = (states) => {
+      map.data.setStyle(feature => {
+        const currentState = states[feature.getProperty('stateId')]
+        let stateColor = 'black';
+        if (currentState) {
+          const { positiveIncrease } = currentState;
+          if (positiveIncrease >= 1000) {
+            stateColor = '#1B4D3E'
+          } else if (positiveIncrease < 1000 && positiveIncrease >= 100) {
+            stateColor = '#00693E'
+          } else if (positiveIncrease < 100) {
+            stateColor = '#018749'
+          } else if (positiveIncrease === 0) {
+            stateColor = '#3CB371'
+          }
+        }
+        return ({
+          strokeColor: 'black',
+          fillColor: stateColor,
+          strokeWeight: 3,
+          fillOpacity: 1
+        });
+      });
+      window.onresize = e => {
+        google.maps.event.trigger(map, 'resize');
+      };
+      google.maps.event.clearListeners(map.data, 'click');
+      map.data.addListener('click', (event) => {
+        let selectedState = states[Number(event.feature.getProperty('stateId'))]
+        alert(
+          selectedState.state  + '\n' + 
+          'Increase of positive cases: ' + selectedState.positiveIncrease + '\n' +
+          'Total positive cases: ' + selectedState.positive + '\n' +
+          'Total deaths: ' + selectedState.death + '\n' +
+          'State\'s Data Reporting Grade: ' + selectedState.dataQualityGrade + '\n' +
+          'Last Updated: ' + selectedState.lastUpdateEt
+        )
+      })
+    }
+    this.getStateInfo(prepareMap);
     const initMap = () => {
       let zoom = 5
       if (screen.width <= 568) {
@@ -69,8 +82,6 @@ class App extends React.Component {
       } else if (screen.width <= 1920) {
         zoom = 5.5
       }
-      console.log(screen.width)
-      console.log('initializing map')
       global.map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.314599, lng: -96.139676},
         zoom: zoom,
@@ -134,78 +145,21 @@ class App extends React.Component {
         ]
       });
       map.data.loadGeoJson(`http://localhost:3000/map`);
-      global.styleMap = (states) => {
-        console.log('adding style')
-        map.data.setStyle(function(feature) {
-          let stateColor
-          ////////////
-          // console.log(states)
-          // console.log(feature.getProperty('stateId'))
-          // console.log(states[feature.getProperty('stateId')])
-          let selState = states[feature.getProperty('stateId')]
-          ////////////
-          if (selState) {
-            if (selState.positiveIncrease >= 1000) {
-              // stateColor = '#A91101'
-              stateColor = '#1B4D3E'
-            }
-            if (selState.positiveIncrease < 1000 && selState.positiveIncrease >= 100) {
-              // stateColor = '#e4181e'
-              stateColor = '#00693E'
-            }
-            if (selState.positiveIncrease < 100) {
-              // stateColor = '#FF6347'
-              stateColor = '#018749'
-            }
-            if (selState.positiveIncrease === 0) {
-              // stateColor = '#F88379'
-              stateColor = '#3CB371'
-            }
-          }
-          else {
-            stateColor = 'black'
-          }
-          return ({
-            strokeColor: 'black',
-            fillColor: stateColor,
-            strokeWeight: 3,
-            fillOpacity: 1
-          });
-        });
-        window.onresize = function(e) {
-          console.log(screen.width)
-          // var currCenter = map.getCenter();
-          google.maps.event.trigger(map, 'resize');
-          // map.setCenter(currCenter);
-        };
-        google.maps.event.clearListeners(map.data, 'click');
-        // let exampleCoords = [{'lat': 31.34294, 'lng': -96.0957}, {'lat': 43.123, 'lng': -108.244}, {'lat': 40.737, 'lng': -77.462}]
-        // exampleCoords.forEach(coord => {
-        //   new google.maps.Marker({
-        //     position: coord,
-        //     map: map,
-        //     icon: './images/covid.gif',
-        //   });
-        // })
-        map.data.addListener('click', (event) => {
-          /////////////////////
-          console.log('hi')
-          let selState = states[Number(event.feature.getProperty('stateId'))]
-          ////////////////////
-          alert(
-            selState.state  + '\n' + 
-            'Increase of positive cases: ' + selState.positiveIncrease + '\n' +
-            'Total positive cases: ' + selState.positive + '\n' +
-            'Total deaths: ' + selState.death + '\n' +
-            'State\'s Data Reporting Grade: ' + selState.dataQualityGrade + '\n' +
-            'Last Updated: ' + selState.lastUpdateEt
-          )
-        })
-      }
     }
     window.initMap = initMap.bind(this);
-    // document.getElementById('content').focus()
-    // console.log(document.activeElement)
+  }
+
+  getStateInfo(cb) {
+    let states
+    axios.get(`/data?date=${this.state.formattedDate}`)
+      .then(res => {
+        states = res.data
+        this.setState({
+          states: res.data
+        });
+      })
+      .then(() => cb(states))
+      .catch(console.log)
   }
 
   changeDate(e) {
@@ -232,8 +186,11 @@ class App extends React.Component {
   render() {
     const { formattedDate } = this.state
     return (
-      <div id='content' onKeyDown={this.changeDate}>
-        <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}<br/><div id='title'>DAILY COVID UPDATES</div></div>
+      <div id='content' onKeyDown={this.changeDate} autoFocus>
+        <div id='header'>
+          <div id='date'>{formattedDate.slice(4,6) + '/' + formattedDate.slice(6,8) + '/' + formattedDate.slice(0,4)}</div>
+          <div id='title'>DAILY COVID UPDATES</div>
+        </div>
         <div id="map"></div>
         <Key />
       </div>
