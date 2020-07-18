@@ -1,132 +1,54 @@
+
+/* On mouse hover, lighten state color */
+path:hover {
+	fill-opacity: .7;
+}
+
+/* Style for Custom Tooltip */
+/* div.tooltip {   
+ 	position: absolute;           
+	text-align: center;           
+	width: 60px;                  
+	height: 28px;                 
+	padding: 2px;             
+	font: 12px sans-serif;        
+	background: white;   
+	border: 0px;      
+	border-radius: 8px;           
+	pointer-events: none;         
+} */
+        
+/* Legend Font Style */
 body {
-  background-color: #000000;
-  margin: 0px;
+  /* font: 11px sans-serif; */
+  margin: auto
+}
+        
+/* Legend Position Style */
+/* .legend {
+	position:absolute;
+	left:800px;
+	top:350px;
+} */
+
+
+.background {
+  fill: none;
+  pointer-events: all;
 }
 
-h1 {
-  color: rgb(0, 179, 21);
-  margin: 0px;
+.feature {
+  fill: #ccc;
+  cursor: pointer;
 }
 
-h3 {
-  color: #008822;
-  margin: 0px;
+.feature.active {
+  fill: orange;
 }
 
-
-#map {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-
-#header {
-  display: grid;
-  grid-template-areas: 
-  "date"
-  "title";
-  position: absolute;
-  top: 630px;
-  left: 50px;
-  z-index: 5;
-}
-
-#date {
-  grid-area: date;
-  font-size: 70px;
-  color: #00693E;
-  font-family: 'Roboto','sans-serif';
-}
-
-#title {
-  grid-area: title;
-  font-size: 30px;
-  color: #00693E;
-  font-family: 'Roboto','sans-serif';
-}
-
-#key {
-  position: absolute;
-  color: #00693E;
-  top: 550px;
-  right: 50px;
-  z-index: 5;
-  font-family: 'Roboto','sans-serif';
-}
-
-.keyIcon {
-  width: 40px;
-   height: 40px
-}
-
-.keyDescriptions {
-  padding-left: 5px;
-}
-
-table, tr, td {
-  border: 1px solid #00693E;
-}
-
-table {
-  width: 200px;
-}
-
-@media screen and (width: 1920px) {
-  #key {
-    top: 800px;
-    font-size: 20px
-  }
-  #header {
-    top: 900px;
-  }
-  table {
-    width: 250px;
-    height: 250px;
-  }
-}
-
-@media screen and (width: 1280px) {
-  #key {
-    top: 580px;
-    right: 30px;
-    font-size: 20px
-  }
-  #header {
-    top: 650px;
-  }
-}
-
-@media screen and (width: 568px), (width: 667px), (width: 736px) {
-  #key {
-    display: none
-  }
-  #header {
-    display: none
-  }
-}
-
-@media screen and (width: 1024px) {
-  #key {
-    top: 550px;
-    right: 20px;
-    font-size: 20px;
-  }
-  #header {
-    top: 620px;
-  }
-  table {
-    width: 180px;
-    height: 180px
-  }
-}
-
-/* Remove text from map */
-a[href^="http://maps.google.com/maps"]{display:none !important}
-a[href^="https://maps.google.com/maps"]{display:none !important}
-
-.gmnoprint a, .gmnoprint span, .gm-style-cc {
-    display:none;
-}
-.gmnoprint div {
-    background:none !important;
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

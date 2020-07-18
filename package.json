@@ -1,36 +1,17 @@
 {
-  "name": "AMERICAPP",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack -d --watch",
-    "boot-prod": "node ./server/connection.js",
-    "boot-dev": "nodemon ./server/connection.js",
-    "seed": "node ./database/utils/seed.js"
+    "boot": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
-    "body-parser": "^1.19.0",
-    "csv-parser": "^2.3.3",
-    "express": "^4.17.1",
-    "papaparse": "^5.2.0",
-    "path": "^0.12.7",
-    "pg": "^8.2.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "sequelize": "^6.3.0"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "dotenv": "^8.2.0",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "d3": "^5.16.0",
+    "express": "^4.17.1"
   }
 }
