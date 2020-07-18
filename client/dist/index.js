@@ -49,14 +49,7 @@ d3.json('/states', (error, us) => {
 });
 
 function clicked(d) {
-  // console.log(counties)
-  // g.selectAll('path')
-  //   .data(counties)
-  //   .enter().append('path')
-  //   .attr('d', path)
-  //   .attr('name', (d) => d.properties.name)
-  //   .attr('class', 'feature')
-  //   .on('click', clicked);
+  console.log(d.properties.name)
 
   if (active.node() === this) { return reset(); }
   active.classed('active', false);
