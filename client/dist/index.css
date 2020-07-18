@@ -96,7 +96,7 @@ table {
   }
 }
 
-@media screen and (width: 568px), (width: 667px) {
+@media screen and (width: 568px), (width: 667px), (width: 736px) {
   #key {
     display: none
   }

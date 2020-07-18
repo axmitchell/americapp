@@ -23,12 +23,16 @@ app.get('/data', (req, res) => {
   db.History.findAll({ where: {date: req.query.date }})
     .then(data => {
       let results = [];
-      data.forEach(state => {
-        if (states.indexOf(state.state.toLowerCase()) === -1) {
-          return;
-        }
-        results[states.indexOf(state.state.toLowerCase())] = state;
-      });
+      if (data.length === 0) {
+        console.log('need to grab data from tracker')
+      } else {
+        data.forEach(state => {
+          if (states.indexOf(state.state.toLowerCase()) === -1) {
+            return;
+          }
+          results[states.indexOf(state.state.toLowerCase())] = state;
+        });
+      }
       res.send(results);
     })
     .catch(console.log);
