@@ -33,7 +33,7 @@ const getHistory = async () => {
   response.data.pipe(writer)
 
   writer.on('finish', () => {
-    execSync(`awk -F, 'BEGIN {OFS=","} { print $1, $2, $3, $13, $14, $17, $27 }' ${originalCSV} > ${modifiedCSV}`)
+    execSync(`awk -F, 'BEGIN {OFS=","} { print $1, $2, $3, $13, $14, $17, $39 }' ${originalCSV} > ${modifiedCSV}`)
     console.log('modified csv is ready!')
     let results = [];
     fs.createReadStream(modifiedCSV)
