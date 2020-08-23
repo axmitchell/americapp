@@ -1,3 +1,5 @@
+*currently working on migrating from Google Maps to the javascript data visualizer library, D3.
+
 # Simple Covid Tracker 
 ### All data provided by the Covid Tracking Project (https://covidtracking.com/data/api)
 
