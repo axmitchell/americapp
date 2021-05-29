@@ -33,7 +33,7 @@ const g = svg.append('g');
 // let counties;
 d3.json('/states', (error, us) => {
   if (error) { throw error; }
-  // counties = topojson.feature(us, us.objects.counties).features
+  // counties = topojson.feature(us, us.objects.counties).features;
   g.selectAll('path')
     .data(topojson.feature(us, us.objects.states).features)
     .enter().append('path')
